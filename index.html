@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="인구, 영토, GDP, 무역, 국방비에 비례해 나라 넓이를 바꾼 3D 지구본 카토그램">
+<meta property="og:title" content="다시 그린 세계">
+<meta property="og:description" content="인구·GDP·무역·국방비로 나라 크기를 다시 그린 지구본">
+<meta property="og:image" content="https://app.jehyunlee.dev/datamap/og-image.jpg">
+<meta property="og:url" content="https://app.jehyunlee.dev/datamap/">
+<title>다시 그린 세계: 인구, 영토, 경제, 무역, 국방비</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&amp;family=Nanum+Myeongjo:wght@800&amp;display=swap" rel="stylesheet">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --dock: 64px;
+  --paper: #EEF3F3; --sea: #D5E4E8; --sea-hi: #EAF2F4; --sea-lo: #B9CFD6; --grat: #A3BEC7; --eq: #7FA2AE;
+  --ink: #1C272B; --ink2: #4E6168; --edge: #F6F9F9; --hi: #1C272B;
+  --tip: #FFFFFF; --tipline: #C9D7DB; --btn: #FFFFFFD9; --btn-on: #1C272B; --btn-on-ink: #FFFFFF;
+  --glow: rgba(120, 175, 195, .45); --shade: rgba(16, 40, 52, .38); --spec: rgba(255, 255, 255, .22);
+  --nd-bg: #E3E9EA; --nd-line: #AFBEC2; --pc0: #F1E2B6; --pc1: #E5C27A; --pc2: #B9C77F; --pc3: #6FB08F; --pc4: #3A8C99; --pc5: #2B5D8C;
+  --as0: #E8B24A;
+  --as1: #ECBE67;
+  --as2: #CC9D41;
+  --as3: #EFC980;
+  --as4: #B58B3A;
+  --as5: #EAB858;
+  --af0: #7DB38A;
+  --af1: #92BF9D;
+  --af2: #6E9E79;
+  --af3: #A4CAAD;
+  --af4: #628C6C;
+  --af5: #87B993;
+  --eu0: #6F93C8;
+  --eu1: #86A4D1;
+  --eu2: #6281B0;
+  --eu3: #9AB3D8;
+  --eu4: #57739C;
+  --eu5: #7B9CCC;
+  --na0: #E07B6A;
+  --na1: #E59082;
+  --na2: #C56C5D;
+  --na3: #E9A397;
+  --na4: #AF6053;
+  --na5: #E28676;
+  --sa0: #A982BD;
+  --sa1: #B796C8;
+  --sa2: #9572A6;
+  --sa3: #C3A8D1;
+  --sa4: #846593;
+  --sa5: #B08CC2;
+  --oc0: #4BAAA8;
+  --oc1: #68B8B6;
+  --oc2: #429694;
+  --oc3: #81C4C2;
+  --oc4: #3A8583;
+  --oc5: #59B1AF;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #0E1416; --sea: #16242A; --sea-hi: #22363E; --sea-lo: #0D171B; --grat: #2C4650; --eq: #3F6170;
+  --ink: #EEF3F4; --ink2: #9DB0B6; --edge: #0E1416; --hi: #FFFFFF;
+  --tip: #1C2A30; --tipline: #34505A; --btn: #1C2A30D9; --btn-on: #EEF3F4; --btn-on-ink: #0E1416;
+  --glow: rgba(70, 140, 170, .38); --shade: rgba(0, 0, 0, .55); --spec: rgba(255, 255, 255, .10);
+  --nd-bg: #1E2A2F; --nd-line: #3F555D; --pc0: #5E5233; --pc1: #8A7238; --pc2: #7C8F48; --pc3: #3F8D70; --pc4: #2F8099; --pc5: #5C93D1;
+  --as0: #B88A33;
+  --as1: #C39D54;
+  --as2: #A2792D;
+  --as3: #CDAD70;
+  --as4: #906C28;
+  --as5: #BE9343;
+  --af0: #5A8C66;
+  --af1: #749E7E;
+  --af2: #4F7B5A;
+  --af3: #8CAE94;
+  --af4: #466D50;
+  --af5: #679572;
+  --eu0: #4F70A0;
+  --eu1: #6B87AF;
+  --eu2: #46638D;
+  --eu3: #849BBC;
+  --eu4: #3E577D;
+  --eu5: #5D7BA8;
+  --na0: #B4594A;
+  --na1: #C07467;
+  --na2: #9E4E41;
+  --na3: #CA8B80;
+  --na4: #8C453A;
+  --na5: #BA6658;
+  --sa0: #8462A0;
+  --sa1: #987BAF;
+  --sa2: #74568D;
+  --sa3: #A991BC;
+  --sa4: #674C7D;
+  --sa5: #8E6FA8;
+  --oc0: #358583;
+  --oc1: #559997;
+  --oc2: #2F7573;
+  --oc3: #72AAA8;
+  --oc4: #296866;
+  --oc5: #458F8D; } }
+:root[data-theme="dark"] { --paper: #0E1416; --sea: #16242A; --sea-hi: #22363E; --sea-lo: #0D171B; --grat: #2C4650; --eq: #3F6170;
+  --ink: #EEF3F4; --ink2: #9DB0B6; --edge: #0E1416; --hi: #FFFFFF;
+  --tip: #1C2A30; --tipline: #34505A; --btn: #1C2A30D9; --btn-on: #EEF3F4; --btn-on-ink: #0E1416;
+  --glow: rgba(70, 140, 170, .38); --shade: rgba(0, 0, 0, .55); --spec: rgba(255, 255, 255, .10);
+  --nd-bg: #1E2A2F; --nd-line: #3F555D; --pc0: #5E5233; --pc1: #8A7238; --pc2: #7C8F48; --pc3: #3F8D70; --pc4: #2F8099; --pc5: #5C93D1;
+  --as0: #B88A33;
+  --as1: #C39D54;
+  --as2: #A2792D;
+  --as3: #CDAD70;
+  --as4: #906C28;
+  --as5: #BE9343;
+  --af0: #5A8C66;
+  --af1: #749E7E;
+  --af2: #4F7B5A;
+  --af3: #8CAE94;
+  --af4: #466D50;
+  --af5: #679572;
+  --eu0: #4F70A0;
+  --eu1: #6B87AF;
+  --eu2: #46638D;
+  --eu3: #849BBC;
+  --eu4: #3E577D;
+  --eu5: #5D7BA8;
+  --na0: #B4594A;
+  --na1: #C07467;
+  --na2: #9E4E41;
+  --na3: #CA8B80;
+  --na4: #8C453A;
+  --na5: #BA6658;
+  --sa0: #8462A0;
+  --sa1: #987BAF;
+  --sa2: #74568D;
+  --sa3: #A991BC;
+  --sa4: #674C7D;
+  --sa5: #8E6FA8;
+  --oc0: #358583;
+  --oc1: #559997;
+  --oc2: #2F7573;
+  --oc3: #72AAA8;
+  --oc4: #296866;
+  --oc5: #458F8D; }
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; min-height: 100%; background: var(--paper); color: var(--ink); word-break: keep-all;
+  font-family: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  display: grid; place-items: center; }
+.wrap { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.stage { position: relative; container-type: inline-size; max-width: 100%; overflow: hidden; aspect-ratio: 16 / 9;
+  width: min(100vw, calc((100vh - var(--dock) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)) * 16 / 9)); }
+#cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; user-select: none;
+  -webkit-user-select: none; cursor: grab; }
+#cv.drag { cursor: grabbing; }
+#cv:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
+.head, .legend, .src { pointer-events: none; text-shadow: 0 0 .35em var(--paper), 0 0 .12em var(--paper); }
+.head { position: absolute; left: 3.5cqw; top: 2.3cqw; max-width: 40cqw; }
+.head h1 { margin: 0; font-family: "Nanum Myeongjo", "AppleMyungjo", "Noto Serif KR", serif; font-weight: 800;
+  font-size: 2.9cqw; line-height: 1.15; letter-spacing: -.02em; }
+.head p { margin: .55cqw 0 0; font-size: 1.06cqw; line-height: 1.5; color: var(--ink2); }
+.legend { position: absolute; left: 3.6cqw; bottom: 2.6cqw; font-size: .94cqw; color: var(--ink2); }
+.legend ul { list-style: none; margin: 0 0 1cqw; padding: 0; display: grid; grid-template-columns: 10.5cqw 10.5cqw; row-gap: .7cqw; column-gap: .6cqw; }
+.legend ul.pc { grid-template-columns: 9.5cqw 9.5cqw; }
+.legend li, .legend .nd { display: flex; align-items: center; gap: .55cqw; white-space: nowrap; }
+.legend li b { color: var(--ink); font-weight: 600; }
+.legend i { display: inline-block; flex: none; width: .9cqw; height: .9cqw; border-radius: .2cqw; }
+.legend i.hatch { background: repeating-linear-gradient(135deg, var(--nd-line) 0 1.2px, var(--nd-bg) 1.2px 3.6px); }
+.legend .nd { margin: 0 0 1.1cqw; }
+.legend .nd[hidden] { display: none; }
+.scale { display: flex; align-items: flex-end; gap: .8cqw; }
+.scale .sqbox { width: 5cqw; height: 5cqw; display: flex; align-items: flex-end; }
+#sq { display: block; border: 1.4px solid var(--ink); }
+.scale b { color: var(--ink); font-weight: 600; }
+.src { position: absolute; right: 3cqw; bottom: 1cqw; max-width: 52cqw; text-align: right; font-size: .72cqw; line-height: 1.5; color: var(--ink2); }
+.zoom { position: absolute; right: 1.6cqw; top: 2.3cqw; display: flex; gap: .35cqw; }
+button { font: inherit; color: var(--ink); background: var(--btn); border: 1px solid var(--tipline); border-radius: .55em; cursor: pointer; }
+button[aria-pressed="true"] { background: var(--btn-on); color: var(--btn-on-ink); border-color: var(--btn-on); }
+button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.zoom button { font-size: max(9px, .95cqw); min-width: 2.3em; height: 2.3em; padding: 0 .7em; }
+.dock { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px 26px; padding: 12px 16px;
+  min-height: var(--dock); width: 100%; max-width: 1100px; }
+.dock .grp { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.dock .lbl { font-size: 13px; color: var(--ink2); margin-right: 2px; }
+.dock button { font-size: 14px; height: 34px; padding: 0 12px; }
+.tip { position: absolute; pointer-events: none; background: var(--tip); border: 1px solid var(--tipline); border-radius: 10px;
+  padding: 10px 13px 11px; min-width: 160px; font-size: 13px; line-height: 1.5; color: var(--ink2);
+  box-shadow: 0 6px 22px rgba(10, 30, 40, .16); opacity: 0; transform: translateY(4px); transition: opacity .12s, transform .12s; }
+.tip.show { opacity: 1; transform: none; }
+.tip b { display: block; font-size: 16px; color: var(--ink); font-weight: 600; margin-bottom: 2px; }
+.tip .n { color: var(--ink); font-weight: 600; font-size: 15px; }
+.hint { display: none; margin: 4px 20px 0; font-size: 13px; color: var(--ink2); text-align: center; line-height: 1.5; }
+@media (orientation: portrait) and (max-width: 700px) { .hint { display: block; } }
+@media (max-width: 700px) {
+  .dock { gap: 10px 16px; padding: 12px 8px; }
+  .dock .grp { gap: 4px; }
+  .dock .lbl { font-size: 12px; }
+  .dock button { font-size: 13px; height: 32px; padding: 0 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .tip { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="stage" id="stage" data-view="globe">
+  <canvas id="cv" tabindex="0" role="img" aria-label="나라 넓이를 선택한 지표에 비례하게 바꾼 세계지도. 끌어서 돌리고 확대할 수 있습니다. 화살표 키로 돌리고 +, - 키로 확대합니다."></canvas>
+  <header class="head"><h1 id="title">인구로 다시 그린 세계</h1><p id="sub">나라마다 넓이가 인구에 비례합니다. 세계 인구 82.3억 명.</p></header>
+  <div class="legend">
+    <ul id="leg" class="two"><li><i style="background:var(--as0)"></i>아시아 <b>59%</b></li><li><i style="background:var(--af0)"></i>아프리카 <b>18%</b></li><li><i style="background:var(--eu0)"></i>유럽 <b>9%</b></li><li><i style="background:var(--na0)"></i>북아메리카 <b>8%</b></li><li><i style="background:var(--sa0)"></i>남아메리카 <b>5%</b></li><li><i style="background:var(--oc0)"></i>오세아니아 <b>1%</b></li></ul>
+    <div class="nd" id="nd" hidden=""><i class="hatch"></i>자료 없음</div>
+    <div class="scale"><span class="sqbox"><span id="sq"></span></span><span>이 정사각형 하나가<br><b id="sqn">1억 명</b>입니다<span id="sqnote"> (화면 가운데 기준)</span></span></div>
+  </div>
+  <div class="src"><span id="src1">인구: Wikipedia, List of countries and dependencies by population (2026년 10월 열람)</span><br>경계: Natural Earth 1:50m. 확산형 카토그램(Gastner–Seguy–More 방식)으로 변형, 지구본은 Equal Earth 역투영으로 넓이 비율 유지.<br>점선은 적도, 가는 선은 원래의 30° 간격 경위선</div>
+  <div class="zoom" id="zoom">
+    <button type="button" data-z="1.6" aria-label="확대">+</button>
+    <button type="button" data-z="0.625" aria-label="축소">−</button>
+    <button type="button" data-z="0" aria-label="처음 보기로">처음으로</button>
+  </div>
+  <div class="tip" id="tip" role="status" aria-live="polite"></div>
+</div>
+<div class="dock">
+  <div class="grp" role="group" aria-label="넓이 기준"><span class="lbl">넓이 기준</span>
+    <button type="button" data-m="pop" aria-pressed="true">인구</button><button type="button" data-m="area" aria-pressed="false">실제 영토</button><button type="button" data-m="gdp" aria-pressed="false">GDP</button><button type="button" data-m="trade" aria-pressed="false">무역</button><button type="button" data-m="mil" aria-pressed="false">국방비</button>
+  </div>
+  <div class="grp" role="group" aria-label="색"><span class="lbl">색</span>
+    <button type="button" data-c="cont" aria-pressed="true">대륙</button><button type="button" data-c="percap" aria-pressed="false">1인당 GDP</button>
+  </div>
+  <div class="grp" role="group" aria-label="보기"><span class="lbl">보기</span>
+    <button type="button" data-v="globe" aria-pressed="true">지구본</button><button type="button" data-v="flat" aria-pressed="false">평면 지도</button>
+  </div>
+</div>
+<p class="hint">끌어서 돌리고 두 손가락으로 확대하세요. 나라를 누르면 수치가 나옵니다. 화면을 가로로 돌리면 더 크게 볼 수 있어요.</p>
+</div>
+<script src="js/vendor/d3.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+</body></html>
